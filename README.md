@@ -98,6 +98,7 @@ No requirements.
 | [aws_security_group.ssh](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_security_group.wireguard](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) | resource |
 | [aws_ami.vpn](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_iam_policy_document.efs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.exec_command](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.fs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -109,12 +110,17 @@ No requirements.
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudwatch_log_retention_in_days"></a> [cloudwatch\_log\_retention\_in\_days](#input\_cloudwatch\_log\_retention\_in\_days) | The cloudwatch log description in days | `number` | `90` | no |
 | <a name="input_ec2_instance_type"></a> [ec2\_instance\_type](#input\_ec2\_instance\_type) | The EC2 instance type to launch for the cluster | `string` | `"t2.small"` | no |
+| <a name="input_ecs_enable_init"></a> [ecs\_enable\_init](#input\_ecs\_enable\_init) | Enable the ECS init process | `bool` | `true` | no |
+| <a name="input_ecs_node_ami_filter"></a> [ecs\_node\_ami\_filter](#input\_ecs\_node\_ami\_filter) | Filter for ECS node AMI | `string` | `"amzn2-ami-ecs-hvm-2.0.20210916-x86_64-ebs"` | no |
+| <a name="input_images"></a> [images](#input\_images) | Map of container images | `map(map(string))` | <pre>{<br>  "wireguard": {<br>    "name": "linuxserver/wireguard",<br>    "tag": "v1.0.20210424-ls36"<br>  }<br>}</pre> | no |
 | <a name="input_key_name"></a> [key\_name](#input\_key\_name) | The AWS Key Pair Key Name | `string` | `"wireguard"` | no |
+| <a name="input_max_number_of_azs"></a> [max\_number\_of\_azs](#input\_max\_number\_of\_azs) | Max number of AZs to configure | `number` | `3` | no |
 | <a name="input_name"></a> [name](#input\_name) | A unique name for the module | `string` | `"wireguard"` | no |
 | <a name="input_server_tz"></a> [server\_tz](#input\_server\_tz) | The time zone for the server | `string` | `"America/Los_Angeles"` | no |
-| <a name="input_server_url"></a> [server\_url](#input\_server\_url) | The FQDN serving wireguard (ex: www.example.com) | `string` | n/a | yes |
+| <a name="input_server_url"></a> [server\_url](#input\_server\_url) | The FQDN serving wireguard (ex: www.example.com) | `string` | `""` | no |
 | <a name="input_ssh_public_key"></a> [ssh\_public\_key](#input\_ssh\_public\_key) | The public key to use for an AWS key pair. This will enable SSH access to the ECS cluster EC2 instance. Leaving this blank will disable access. | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | tags | `map(string)` | `{}` | no |
+| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | VPC CIDR range | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_wireguard_peers"></a> [wireguard\_peers](#input\_wireguard\_peers) | The number of wireguard peers to configure. When using wireguard-ui set to 0 or leave as default. | `number` | `0` | no |
 
 ## Outputs
@@ -125,6 +131,7 @@ No requirements.
 | <a name="output_efs_ap_id_config"></a> [efs\_ap\_id\_config](#output\_efs\_ap\_id\_config) | n/a |
 | <a name="output_efs_fs"></a> [efs\_fs](#output\_efs\_fs) | n/a |
 | <a name="output_elb_dns_name"></a> [elb\_dns\_name](#output\_elb\_dns\_name) | n/a |
+| <a name="output_nlb_eip"></a> [nlb\_eip](#output\_nlb\_eip) | n/a |
 | <a name="output_public_subnets"></a> [public\_subnets](#output\_public\_subnets) | n/a |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | n/a |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

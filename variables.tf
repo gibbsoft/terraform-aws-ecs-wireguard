@@ -1,17 +1,3 @@
-
-locals {
-  PORT_SSH       = 22
-  PORT_HTTPS     = 443
-  PORT_WIREGUARD = 51820
-  PORT_NFS       = 2049
-
-  CIDR_IPV4_INTERNET = "0.0.0.0/0"
-  CIDR_IPV6_INTERNET = "::/0"
-
-  POSIX_USER  = 0
-  POSIX_GROUP = 0
-}
-
 variable "name" {
   type        = string
   default     = "wireguard"
@@ -45,6 +31,7 @@ variable "server_tz" {
 variable "server_url" {
   type        = string
   description = "The FQDN serving wireguard (ex: www.example.com)"
+  default     = ""
 }
 
 variable "ssh_public_key" {
@@ -63,4 +50,39 @@ variable "key_name" {
   type        = string
   default     = "wireguard"
   description = "The AWS Key Pair Key Name"
+}
+
+variable "ecs_enable_init" {
+  type        = bool
+  default     = true
+  description = "Enable the ECS init process"
+}
+
+variable "images" {
+  type = map(map(string))
+  default = {
+    wireguard = {
+      name = "linuxserver/wireguard"
+      tag  = "v1.0.20210424-ls36"
+    }
+  }
+  description = "Map of container images"
+}
+
+variable "ecs_node_ami_filter" {
+  type        = string
+  default     = "amzn2-ami-ecs-hvm-2.0.20210916-x86_64-ebs"
+  description = "Filter for ECS node AMI"
+}
+
+variable "max_number_of_azs" {
+  type        = number
+  default     = 3
+  description = "Max number of AZs to configure"
+}
+
+variable "vpc_cidr" {
+  type        = string
+  default     = "10.0.0.0/16"
+  description = "VPC CIDR range"
 }

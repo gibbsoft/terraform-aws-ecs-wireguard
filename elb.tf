@@ -41,6 +41,16 @@ resource "aws_lb_target_group" "main_wireguard" {
   target_type = "instance"
   vpc_id      = module.vpc.vpc_id
 
+  health_check {
+    enabled             = true
+    port                = local.PORT_HEALTHCHECK
+    protocol            = "HTTP"
+    path                = "/"
+    matcher             = "200"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+
   tags = var.tags
 }
 
@@ -59,4 +69,3 @@ resource "aws_lb_listener" "main_wireguard" {
     aws_lb_target_group.main_wireguard,
   ]
 }
-

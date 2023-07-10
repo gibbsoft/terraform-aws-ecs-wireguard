@@ -22,7 +22,7 @@ data "aws_ami" "vpn" {
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-ecs-hvm-*-x86_64-ebs"]
+    values = [var.ecs_node_ami_filter]
   }
 }
 
@@ -49,11 +49,16 @@ module "ecs_cluster" {
   target_capacity               = 70
   vpc_id                        = module.vpc.vpc_id
   image_id                      = data.aws_ami.vpn.image_id
-  user_data = templatefile(format("%s/userdata.tmpl", path.module), {
-    ecs_cluster = var.name,
-    region      = data.aws_region.current.name
-    tags        = merge(var.tags, { Name = var.name })
+
+  user_data = templatefile(format("%s/templates/userdata.tmpl", path.module), {
+    ecs_cluster           = var.name,
+    region                = data.aws_region.current.name
+    tags                  = merge(var.tags, { Name = var.name })
+    healthcheck_container = "ecs-agent"
+    healthcheck_port      = local.PORT_HEALTHCHECK
+    healthcheck_script    = file(format("%s/files/node-healthz.py", path.module))
   })
+
   security_groups = concat([
     aws_security_group.nfs.id,
     aws_security_group.wireguard.id,

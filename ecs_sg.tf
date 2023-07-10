@@ -5,20 +5,18 @@ resource "aws_security_group" "nfs" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    protocol         = "TCP"
-    from_port        = local.PORT_NFS
-    to_port          = local.PORT_NFS
-    cidr_blocks      = [local.CIDR_IPV4_INTERNET]
-    ipv6_cidr_blocks = [local.CIDR_IPV6_INTERNET]
-    description      = "NFS Access"
+    protocol    = "TCP"
+    from_port   = local.PORT_NFS
+    to_port     = local.PORT_NFS
+    cidr_blocks = [local.CIDR_IPV4_INTERNET]
+    description = "NFS Access"
   }
 
   egress {
-    protocol         = "TCP"
-    from_port        = local.PORT_NFS
-    to_port          = local.PORT_NFS
-    cidr_blocks      = [local.CIDR_IPV4_INTERNET]
-    ipv6_cidr_blocks = [local.CIDR_IPV6_INTERNET]
+    protocol    = "TCP"
+    from_port   = local.PORT_NFS
+    to_port     = local.PORT_NFS
+    cidr_blocks = [local.CIDR_IPV4_INTERNET]
   }
 
   lifecycle {
@@ -32,20 +30,26 @@ resource "aws_security_group" "wireguard" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    protocol         = "UDP"
-    from_port        = local.PORT_WIREGUARD
-    to_port          = local.PORT_WIREGUARD
-    cidr_blocks      = [local.CIDR_IPV4_INTERNET]
-    ipv6_cidr_blocks = [local.CIDR_IPV6_INTERNET]
-    description      = "Wireguard Access"
+    protocol    = "UDP"
+    from_port   = local.PORT_WIREGUARD
+    to_port     = local.PORT_WIREGUARD
+    cidr_blocks = [local.CIDR_IPV4_INTERNET]
+    description = "Wireguard Access"
+  }
+
+  ingress {
+    protocol    = "TCP"
+    from_port   = local.PORT_HEALTHCHECK
+    to_port     = local.PORT_HEALTHCHECK
+    cidr_blocks = module.vpc.public_subnets_cidr_blocks
+    description = "NLB Healthcheck Access"
   }
 
   egress {
-    protocol         = "-1"
-    from_port        = 0
-    to_port          = 0
-    cidr_blocks      = [local.CIDR_IPV4_INTERNET]
-    ipv6_cidr_blocks = [local.CIDR_IPV6_INTERNET]
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = [local.CIDR_IPV4_INTERNET]
   }
 
   lifecycle {
@@ -61,20 +65,18 @@ resource "aws_security_group" "ssh" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    protocol         = "TCP"
-    from_port        = local.PORT_SSH
-    to_port          = local.PORT_SSH
-    cidr_blocks      = [local.CIDR_IPV4_INTERNET]
-    ipv6_cidr_blocks = [local.CIDR_IPV6_INTERNET]
-    description      = "SSH Access"
+    protocol    = "TCP"
+    from_port   = local.PORT_SSH
+    to_port     = local.PORT_SSH
+    cidr_blocks = [local.CIDR_IPV4_INTERNET]
+    description = "SSH Access"
   }
 
   egress {
-    protocol         = "-1"
-    from_port        = 0
-    to_port          = 0
-    cidr_blocks      = [local.CIDR_IPV4_INTERNET]
-    ipv6_cidr_blocks = [local.CIDR_IPV6_INTERNET]
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = [local.CIDR_IPV4_INTERNET]
   }
 
   lifecycle {

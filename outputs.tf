@@ -22,3 +22,7 @@ output "efs_ap_id_config" {
 output "elb_dns_name" {
   value = aws_lb.main.dns_name
 }
+
+output "nlb_eip" {
+  value = { for eip in aws_eip.nlb : eip.id => eip.public_ip }
+}

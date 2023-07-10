@@ -3,7 +3,7 @@ resource "aws_ecs_task_definition" "wireguard" {
   container_definitions = jsonencode([
     {
       name      = var.name
-      image     = "linuxserver/wireguard:v1.0.20210424-ls36"
+      image     = local.wireguard_container_image
       cpu       = 1
       memory    = 512
       essential = true
@@ -21,11 +21,11 @@ resource "aws_ecs_task_definition" "wireguard" {
           Value = var.server_tz
         },
         {
-          Name  = "SERVER_URL"
+          Name  = "SERVERURL"
           Value = var.server_url
         },
         {
-          Name  = "SERVER_PORT"
+          Name  = "SERVERPORT"
           Value = tostring(local.PORT_WIREGUARD)
         },
         {
@@ -41,11 +41,8 @@ resource "aws_ecs_task_definition" "wireguard" {
           Value = "10.13.13.0"
         },
         {
-          Name = "ALLOWEDIPS"
-          Value = join(",", [
-            local.CIDR_IPV4_INTERNET,
-            local.CIDR_IPV6_INTERNET,
-          ])
+          Name  = "ALLOWEDIPS"
+          Value = local.CIDR_IPV4_INTERNET
         },
       ]
       mountPoints = [
@@ -66,9 +63,9 @@ resource "aws_ecs_task_definition" "wireguard" {
       volumesFrom = []
       linuxParameters = {
         capabilities = {
-          add = ["NET_ADMIN", "SYS_MODULE"]
+          add = ["NET_ADMIN"]
         }
-        initProcessEnabled = true
+        initProcessEnabled = var.ecs_enable_init
       }
       systemControls = [
         # net.ipv4.ip_forward=1
@@ -92,6 +89,13 @@ resource "aws_ecs_task_definition" "wireguard" {
           awslogs-region        = data.aws_region.current.name
           awslogs-stream-prefix = var.name
         }
+      }
+      healthCheck = {
+        retries = 3
+        command = ["CMD-SHELL", "ip link | grep -c wg0"]
+        timeout : 5
+        interval : 10
+        startPeriod : 10
       }
     },
   ])
@@ -136,6 +140,13 @@ resource "aws_ecs_service" "wireguard" {
   task_definition = aws_ecs_task_definition.wireguard.arn
 
   enable_execute_command = true
+
+  force_new_deployment = true
+
+  # FIXME requires later version of aws provider
+  # triggers = {
+  #   redeployment = timestamp()
+  # }
 
   load_balancer {
     container_name   = var.name
