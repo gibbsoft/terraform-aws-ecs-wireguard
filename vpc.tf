@@ -1,6 +1,6 @@
 
 resource "aws_eip" "nat" {
-  count = 3
+  count = var.max_number_of_azs
 
   vpc = true
 
