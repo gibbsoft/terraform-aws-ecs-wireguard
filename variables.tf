@@ -87,6 +87,40 @@ variable "vpc_cidr" {
   description = "VPC CIDR range"
 }
 
+variable "health_check_type" {
+  type        = string
+  default     = "EC2"
+  description = "Type of healthcheck for ASG"
+
+  validation {
+    condition     = contains(["EC2", "ELB"], var.health_check_type)
+    error_message = "The health_check_type value must be either EC2 or ELB."
+  }
+}
+
+variable "scheduling_strategy" {
+  type        = string
+  default     = "REPLICA"
+  description = "Type scheduling strategy for ECS service"
+
+  validation {
+    condition     = contains(["REPLICA", "DAEMON"], var.scheduling_strategy)
+    error_message = "The scheduling_strategy value must be either REPLICA or DAEMON."
+  }
+}
+
+variable "desired_count" {
+  type        = number
+  default     = 1
+  description = "Max number of task instances to run"
+}
+
+variable "force_new_deployment" {
+  type        = bool
+  default     = false
+  description = "Force new ECS deployments"
+}
+
 variable "deregistration_delay" {
   type        = number
   default     = 300

@@ -34,8 +34,8 @@ resource "aws_key_pair" "main" {
 }
 
 module "ecs_cluster" {
-  source  = "dod-iac/ecs-cluster/aws"
-  version = "~> 1.3"
+  # source  = "dod-iac/ecs-cluster/aws"
+  source = "git::https://git@github.com/gibbsoft/terraform-aws-ecs-cluster.git//.?ref=v1.3.3"
 
   desired_capacity = 1
   min_size         = 1
@@ -49,6 +49,7 @@ module "ecs_cluster" {
   target_capacity               = 70
   vpc_id                        = module.vpc.vpc_id
   image_id                      = data.aws_ami.vpn.image_id
+  health_check_type             = var.health_check_type
 
   user_data = templatefile(format("%s/templates/userdata.tmpl", path.module), {
     ecs_cluster           = var.name,

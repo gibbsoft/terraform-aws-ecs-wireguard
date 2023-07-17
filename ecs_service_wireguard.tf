@@ -133,15 +133,14 @@ resource "aws_ecs_task_definition" "wireguard" {
 }
 
 resource "aws_ecs_service" "wireguard" {
-  cluster         = module.ecs_cluster.ecs_cluster_name
-  desired_count   = 1
-  launch_type     = "EC2"
-  name            = var.name
-  task_definition = aws_ecs_task_definition.wireguard.arn
-
+  cluster                = module.ecs_cluster.ecs_cluster_name
+  launch_type            = "EC2"
+  name                   = var.name
+  task_definition        = aws_ecs_task_definition.wireguard.arn
+  scheduling_strategy    = var.scheduling_strategy
+  desired_count          = var.scheduling_strategy == "EC2" ? var.desired_count : null
   enable_execute_command = true
-
-  force_new_deployment = true
+  force_new_deployment   = var.force_new_deployment
 
   # FIXME requires later version of aws provider
   # triggers = {
@@ -156,6 +155,7 @@ resource "aws_ecs_service" "wireguard" {
 
   depends_on = [
     aws_cloudwatch_log_group.logs,
+    module.ecs_task_role,
   ]
 
   tags = var.tags

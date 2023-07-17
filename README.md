@@ -62,7 +62,7 @@ No requirements.
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_cloudwatch_kms_key"></a> [cloudwatch\_kms\_key](#module\_cloudwatch\_kms\_key) | dod-iac/cloudwatch-kms-key/aws | ~> 1.0.0 |
-| <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | dod-iac/ecs-cluster/aws | ~> 1.3 |
+| <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | git::https://git@github.com/gibbsoft/terraform-aws-ecs-cluster.git//. | v1.3.3 |
 | <a name="module_ecs_instance_role"></a> [ecs\_instance\_role](#module\_ecs\_instance\_role) | dod-iac/ec2-instance-role/aws | ~> 1.0 |
 | <a name="module_ecs_task_execution_role"></a> [ecs\_task\_execution\_role](#module\_ecs\_task\_execution\_role) | dod-iac/ecs-task-execution-role/aws | ~> 1.0 |
 | <a name="module_ecs_task_role"></a> [ecs\_task\_role](#module\_ecs\_task\_role) | dod-iac/ecs-task-role/aws | ~> 1.0 |
@@ -110,13 +110,17 @@ No requirements.
 |------|-------------|------|---------|:--------:|
 | <a name="input_cloudwatch_log_retention_in_days"></a> [cloudwatch\_log\_retention\_in\_days](#input\_cloudwatch\_log\_retention\_in\_days) | The cloudwatch log description in days | `number` | `90` | no |
 | <a name="input_deregistration_delay"></a> [deregistration\_delay](#input\_deregistration\_delay) | Max number of task instances to run | `number` | `300` | no |
+| <a name="input_desired_count"></a> [desired\_count](#input\_desired\_count) | Max number of task instances to run | `number` | `1` | no |
 | <a name="input_ec2_instance_type"></a> [ec2\_instance\_type](#input\_ec2\_instance\_type) | The EC2 instance type to launch for the cluster | `string` | `"t2.small"` | no |
 | <a name="input_ecs_enable_init"></a> [ecs\_enable\_init](#input\_ecs\_enable\_init) | Enable the ECS init process | `bool` | `true` | no |
 | <a name="input_ecs_node_ami_filter"></a> [ecs\_node\_ami\_filter](#input\_ecs\_node\_ami\_filter) | Filter for ECS node AMI | `string` | `"amzn2-ami-ecs-hvm-2.0.20210916-x86_64-ebs"` | no |
+| <a name="input_force_new_deployment"></a> [force\_new\_deployment](#input\_force\_new\_deployment) | Force new ECS deployments | `bool` | `false` | no |
+| <a name="input_health_check_type"></a> [health\_check\_type](#input\_health\_check\_type) | Type of healthcheck for ASG | `string` | `"EC2"` | no |
 | <a name="input_images"></a> [images](#input\_images) | Map of container images | `map(map(string))` | <pre>{<br>  "wireguard": {<br>    "name": "linuxserver/wireguard",<br>    "tag": "v1.0.20210424-ls36"<br>  }<br>}</pre> | no |
 | <a name="input_key_name"></a> [key\_name](#input\_key\_name) | The AWS Key Pair Key Name | `string` | `"wireguard"` | no |
 | <a name="input_max_number_of_azs"></a> [max\_number\_of\_azs](#input\_max\_number\_of\_azs) | Max number of AZs to configure | `number` | `3` | no |
 | <a name="input_name"></a> [name](#input\_name) | A unique name for the module | `string` | `"wireguard"` | no |
+| <a name="input_scheduling_strategy"></a> [scheduling\_strategy](#input\_scheduling\_strategy) | Type scheduling strategy for ECS service | `string` | `"REPLICA"` | no |
 | <a name="input_server_tz"></a> [server\_tz](#input\_server\_tz) | The time zone for the server | `string` | `"America/Los_Angeles"` | no |
 | <a name="input_server_url"></a> [server\_url](#input\_server\_url) | The FQDN serving wireguard (ex: www.example.com) | `string` | `""` | no |
 | <a name="input_ssh_public_key"></a> [ssh\_public\_key](#input\_ssh\_public\_key) | The public key to use for an AWS key pair. This will enable SSH access to the ECS cluster EC2 instance. Leaving this blank will disable access. | `string` | `""` | no |
