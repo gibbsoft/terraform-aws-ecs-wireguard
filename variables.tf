@@ -86,3 +86,9 @@ variable "vpc_cidr" {
   default     = "10.0.0.0/16"
   description = "VPC CIDR range"
 }
+
+variable "deregistration_delay" {
+  type        = number
+  default     = 300
+  description = "Max number of task instances to run"
+}

@@ -35,11 +35,12 @@ resource "aws_lb" "main" {
 # UDP - wireguard
 
 resource "aws_lb_target_group" "main_wireguard" {
-  name        = format("app-tg-wg-%s", var.name)
-  port        = local.PORT_WIREGUARD
-  protocol    = "UDP"
-  target_type = "instance"
-  vpc_id      = module.vpc.vpc_id
+  name                 = format("app-tg-wg-%s", var.name)
+  port                 = local.PORT_WIREGUARD
+  protocol             = "UDP"
+  target_type          = "instance"
+  vpc_id               = module.vpc.vpc_id
+  deregistration_delay = var.deregistration_delay
 
   health_check {
     enabled             = true
